@@ -190,14 +190,15 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:visibility="invisible" />
+
         <com.draw.viewcustom.StickerTextView
             android:id="@+id/stickerTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
 
     </FrameLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ln_bottom"
         android:layout_width="match_parent"
@@ -261,10 +262,10 @@
                 android:backgroundTint="#01C296"
                 android:ellipsize="marquee"
                 android:fontFamily="@font/i_ciel_cadena"
-                android:paddingVertical="12dp"
-                android:paddingHorizontal="8dp"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="12dp"
                 android:singleLine="true"
                 android:text="@string/create_animation"
                 android:textColor="@color/white"

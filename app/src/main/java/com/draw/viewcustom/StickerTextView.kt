@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import com.draw.R
+import com.draw.callback.ICallBackCheck
 import kotlin.math.atan2
 import kotlin.math.hypot
 
@@ -36,6 +37,8 @@ class StickerTextView @JvmOverloads constructor(
     private var isTouchingSticker = false
     private val hideBorderHandler = Handler(Looper.getMainLooper())
     private val hideBorderRunnable = Runnable { borderView.isVisible = false }
+
+    private var isHandleCheck: ICallBackCheck? = null
 
     init {
         // Initialize the border view
@@ -222,6 +225,7 @@ class StickerTextView @JvmOverloads constructor(
                         hideBorderHandler.removeCallbacks(hideBorderRunnable)
                     } else {
                         isTouchingSticker = false
+                        isHandleCheck?.check(false)
                     }
                 }
                 MotionEvent.ACTION_MOVE -> {

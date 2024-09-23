@@ -383,6 +383,7 @@ class DrawActivity : BaseActivity() {
             val newText = input.text.toString()
             stickerTextView.updateText(newText)
             stickerTextView.visibility = View.VISIBLE // Hiển thị StickerTextView
+
         }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
 
