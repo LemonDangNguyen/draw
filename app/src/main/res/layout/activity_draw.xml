@@ -73,6 +73,7 @@
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/ln_header">
 
+
         <ImageView
             android:id="@+id/btn_pen"
             android:layout_width="0dp"
@@ -113,7 +114,15 @@
             android:background="@drawable/bg_radius_12dp"
             android:padding="16dp"
             android:src="@drawable/ic_copy" />
-
+        <ImageView
+            android:id="@+id/btn_insert_sticker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_radius_12dp"
+            android:padding="16dp"
+            android:src="@drawable/ic_stickerz_icon" />
         <ImageView
             android:id="@+id/btn_insert_text"
             android:layout_width="0dp"
