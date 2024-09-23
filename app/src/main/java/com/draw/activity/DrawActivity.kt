@@ -18,9 +18,11 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
@@ -47,6 +49,7 @@ import com.draw.ultis.ViewControl.invisible
 import com.draw.ultis.ViewControl.visible
 import com.draw.viewcustom.DrawView
 import com.draw.viewcustom.StickerTextView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import kotlinx.coroutines.Dispatchers
@@ -372,22 +375,28 @@ class DrawActivity : BaseActivity() {
 
 
     private fun showStickerTextDialog(stickerTextView: StickerTextView) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Enter Sticker Text")
+        // Inflate layout tùy chỉnh
+        val inflater = LayoutInflater.from(this)
+        val dialogView = inflater.inflate(R.layout.bottom_sheet_dialog, null) // Thay thế R.layout.your_custom_layout bằng tên file XML của bạn
 
-        // Set up the input
-        val input = EditText(this)
-        builder.setView(input)
+        // Tạo BottomSheetDialog
+        val bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setContentView(dialogView)
 
-        builder.setPositiveButton("OK") { _, _ ->
-            val newText = input.text.toString()
+        // Tìm các view trong layout
+        val etInput = dialogView.findViewById<EditText>(R.id.etInput)
+        val ivCheck = dialogView.findViewById<ImageView>(R.id.ivCheck)
+
+        // Xử lý sự kiện nhấn nút "Check"
+        ivCheck.setOnClickListener {
+            val newText = etInput.text.toString()
             stickerTextView.updateText(newText)
             stickerTextView.visibility = View.VISIBLE // Hiển thị StickerTextView
-
+            bottomSheetDialog.dismiss() // Đóng BottomSheetDialog sau khi cập nhật
         }
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
 
-        builder.show()
+        // Hiển thị BottomSheetDialog
+        bottomSheetDialog.show()
     }
 
 
