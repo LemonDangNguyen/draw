@@ -48,6 +48,7 @@ import com.draw.ultis.ViewControl.gone
 import com.draw.ultis.ViewControl.invisible
 import com.draw.ultis.ViewControl.visible
 import com.draw.viewcustom.DrawView
+import com.draw.viewcustom.StickerTextDialog
 import com.draw.viewcustom.StickerTextView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -55,6 +56,7 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -73,7 +75,9 @@ class DrawActivity : BaseActivity() {
 
     private lateinit var dialog: Dialog
     private lateinit var bindingDialog: DialogProgressBinding
+    private var mDefaultColor = 0
 
+    private lateinit var mColorPreview: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -87,6 +91,7 @@ class DrawActivity : BaseActivity() {
         stickerTextView.visibility = View.GONE
         isGuide = intent.getIntExtra(KEY_POSITION_ANIM_GUIDE, -1) != -1
 
+        val stickerPhotoView = binding.stikerPhoto
 
 
         if (isGuide) {
@@ -208,6 +213,7 @@ class DrawActivity : BaseActivity() {
             binding.btnEraser.backgroundTintList = null
             binding.btnPen.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#01C296"))
             binding.btnPen.imageTintList = null
+            stickerTextView.visibility = View.VISIBLE
         }
 
         binding.btnEraser.setOnClickListener {
@@ -249,7 +255,7 @@ class DrawActivity : BaseActivity() {
         }
         binding.btnInsertText.setOnClickListener {
             showStickerTextDialog(stickerTextView)
-           // binding.lnPenwidth.gone()
+            binding.drawView.setEraserMode(false) // hoặc setPenMode(true) nếu cần
         }
         binding.btnOption.setOnClickListener {
             Toast.makeText(this, "Comming soon!", Toast.LENGTH_SHORT).show()
@@ -375,28 +381,8 @@ class DrawActivity : BaseActivity() {
 
 
     private fun showStickerTextDialog(stickerTextView: StickerTextView) {
-        // Inflate layout tùy chỉnh
-        val inflater = LayoutInflater.from(this)
-        val dialogView = inflater.inflate(R.layout.bottom_sheet_dialog, null) // Thay thế R.layout.your_custom_layout bằng tên file XML của bạn
-
-        // Tạo BottomSheetDialog
-        val bottomSheetDialog = BottomSheetDialog(this)
-        bottomSheetDialog.setContentView(dialogView)
-
-        // Tìm các view trong layout
-        val etInput = dialogView.findViewById<EditText>(R.id.etInput)
-        val ivCheck = dialogView.findViewById<ImageView>(R.id.ivCheck)
-
-        // Xử lý sự kiện nhấn nút "Check"
-        ivCheck.setOnClickListener {
-            val newText = etInput.text.toString()
-            stickerTextView.updateText(newText)
-            stickerTextView.visibility = View.VISIBLE // Hiển thị StickerTextView
-            bottomSheetDialog.dismiss() // Đóng BottomSheetDialog sau khi cập nhật
-        }
-
-        // Hiển thị BottomSheetDialog
-        bottomSheetDialog.show()
+       val dialog = StickerTextDialog(stickerTextView, mDefaultColor)
+        dialog.show(supportFragmentManager, "StickerTextDialog")
     }
 
 

@@ -77,4 +77,6 @@ dependencies {
     // Activity KTX
     implementation "androidx.activity:activity-ktx:1.9.0"
 
+    implementation ("com.github.yukuku:ambilwarna:2.0.1")
+
 }
