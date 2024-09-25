@@ -393,7 +393,7 @@ class DrawActivity : BaseActivity() {
     }
 
     private fun showStickerPhotoDialog() {
-        val dialog = StickerPhotoDialog()
+        val dialog = StickerPhotoDialog(this@DrawActivity)
         dialog.show(supportFragmentManager, "StickerPhotoDialog")
     }
 

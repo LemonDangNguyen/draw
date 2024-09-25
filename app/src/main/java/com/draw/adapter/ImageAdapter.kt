@@ -25,15 +25,12 @@ class ImageAdapter(private val context: Context, private val imagePaths: List<St
         val imagePath = imagePaths[position]
         Glide.with(context)
             .load(imagePath)
-            .placeholder(R.drawable.frame_a_creator_10) // Thêm hình ảnh placeholder nếu cần
-            .error(R.drawable.frame_an_angry_gift_7) // Thêm hình ảnh khi có lỗi nếu cần
+            .placeholder(R.drawable.frame_a_creator_10) // Hình ảnh placeholder
+            .error(R.drawable.frame_an_angry_gift_7) // Hình ảnh lỗi
             .into(holder.imageView)
     }
-
 
     override fun getItemCount(): Int {
         return imagePaths.size
     }
-
-
 }
