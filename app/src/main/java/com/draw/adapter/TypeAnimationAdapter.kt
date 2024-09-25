@@ -13,8 +13,7 @@ class TypeAnimationAdapter(
     private val listTypeAnimationGuide: MutableList<TypeAnimationGuide>,
     private val onClickSeeAll: (pos: Int) -> Unit,
     private val onClickGuide: (posType: Int, posGuide: Int) -> Unit
-) :
-    RecyclerView.Adapter<TypeAnimationAdapter.AnimationGuideViewHolder>() {
+) : RecyclerView.Adapter<TypeAnimationAdapter.AnimationGuideViewHolder>() {
 
     inner class AnimationGuideViewHolder(val binding: ItemTypeAnimationBinding) :
         RecyclerView.ViewHolder(binding.root) {

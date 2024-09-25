@@ -631,6 +631,20 @@ object DataClient {
                     R.drawable.frame_mermaid_hello_8,
                     R.drawable.frame_mermaid_hello_9,
                 )
+            ),AnimationGuide(
+                R.string.mermaid_hello,
+                R.drawable.frame_mermaid_hello_1,
+                listOf(
+                    R.drawable.frame_mermaid_hello_1,
+                    R.drawable.frame_mermaid_hello_2,
+                    R.drawable.frame_mermaid_hello_3,
+                    R.drawable.frame_mermaid_hello_4,
+                    R.drawable.frame_mermaid_hello_5,
+                    R.drawable.frame_mermaid_hello_6,
+                    R.drawable.frame_mermaid_hello_7,
+                    R.drawable.frame_mermaid_hello_8,
+                    R.drawable.frame_mermaid_hello_9,
+                )
             ),
             AnimationGuide(
                 R.string.no_emotion,
