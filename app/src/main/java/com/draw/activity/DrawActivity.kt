@@ -48,6 +48,8 @@ import com.draw.ultis.ViewControl.gone
 import com.draw.ultis.ViewControl.invisible
 import com.draw.ultis.ViewControl.visible
 import com.draw.viewcustom.DrawView
+import com.draw.viewcustom.StickerImportDialog
+import com.draw.viewcustom.StickerPhotoDialog
 import com.draw.viewcustom.StickerTextDialog
 import com.draw.viewcustom.StickerTextView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -76,8 +78,6 @@ class DrawActivity : BaseActivity() {
     private lateinit var dialog: Dialog
     private lateinit var bindingDialog: DialogProgressBinding
     private var mDefaultColor = 0
-
-    private lateinit var mColorPreview: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -89,9 +89,9 @@ class DrawActivity : BaseActivity() {
         binding.btnPrevios.isEnabled = false
         val stickerTextView = binding.stickerTextView
         stickerTextView.visibility = View.GONE
+        val photoSticker = binding.stikerPhoto
+        photoSticker.visibility =View.GONE
         isGuide = intent.getIntExtra(KEY_POSITION_ANIM_GUIDE, -1) != -1
-
-        val stickerPhotoView = binding.stikerPhoto
 
 
         if (isGuide) {
@@ -255,8 +255,16 @@ class DrawActivity : BaseActivity() {
         }
         binding.btnInsertText.setOnClickListener {
             showStickerTextDialog(stickerTextView)
-            binding.drawView.setEraserMode(false) // hoặc setPenMode(true) nếu cần
+          //  binding.drawView.setEraserMode(false) // hoặc setPenMode(true) nếu cần
         }
+        binding.btnInsertPicture.setOnClickListener {
+            showStickerPhotoDialog()
+        }
+        binding.btnInsertSticker.setOnClickListener {
+            showStickerImportDialog()
+        }
+
+
         binding.btnOption.setOnClickListener {
             Toast.makeText(this, "Comming soon!", Toast.LENGTH_SHORT).show()
         }
@@ -377,6 +385,16 @@ class DrawActivity : BaseActivity() {
         binding.btnPause.setOnClickListener {
             stopPreview()
         }
+    }
+
+    private fun showStickerImportDialog() {
+        val dialog = StickerImportDialog()
+        dialog.show(supportFragmentManager, "StickerImportDialog")
+    }
+
+    private fun showStickerPhotoDialog() {
+        val dialog = StickerPhotoDialog()
+        dialog.show(supportFragmentManager, "StickerPhotoDialog")
     }
 
 

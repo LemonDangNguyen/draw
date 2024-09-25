@@ -114,10 +114,6 @@ class StickerPhotoView @JvmOverloads constructor(
     private fun handleTransform(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                isTouchingSticker = true
-                borderView.isVisible = true // Hiển thị đường viền khi chạm vào sticker
-                hideBorderHandler.removeCallbacks(hideBorderRunnable)
-
                 initialRotation = getAngle(event.rawX, event.rawY)
                 lastX = event.rawX
                 lastY = event.rawY
@@ -142,8 +138,7 @@ class StickerPhotoView @JvmOverloads constructor(
                 lastY = event.rawY
             }
             MotionEvent.ACTION_UP -> {
-                isTouchingSticker = false
-                hideBorderHandler.postDelayed(hideBorderRunnable, 2000) // Ẩn đường viền sau 2 giây
+                hideBorderHandler.postDelayed(hideBorderRunnable, 2000)
             }
         }
         return true

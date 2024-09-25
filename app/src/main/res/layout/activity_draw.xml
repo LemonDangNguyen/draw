@@ -305,9 +305,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="31dp"
             tools:listitem="@layout/item_draw" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

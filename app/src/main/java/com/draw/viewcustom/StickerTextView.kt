@@ -361,7 +361,7 @@ class StickerTextView @JvmOverloads constructor(
         return bitmap
     }
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        Log.d("2tdp", "dispatchTouchEvent: ${event.action}")
+       // Log.d("2tdp", "dispatchTouchEvent: ${event.action}")
         if (isTouchWithinSticker(event)) {
             // Nếu chạm vào sticker hoặc border, xử lý bình thường
             return super.dispatchTouchEvent(event)

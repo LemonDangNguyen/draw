@@ -20,17 +20,17 @@ class StickerTextDialog(
 
 
     private lateinit var mColorPreview: View
-    override fun onCreateView(
+     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate layout tùy chỉnh
-        val dialogView = inflater.inflate(R.layout.bottom_sheet_dialog, container, false)
+        val dialogView = inflater.inflate(R.layout.bottom_sheet_dialog_textsticker, container, false)
 
         // Tìm các view trong layout
         val etInput = dialogView.findViewById<EditText>(R.id.etInput)
         mColorPreview  = dialogView.findViewById(R.id.preview_selected_color)
-        mDefaultColor = 123456
+        mDefaultColor = 0
         var pickColorButton = dialogView.findViewById<TextView>(R.id.pick_color_button)
         var setcolorButton = dialogView.findViewById<TextView>(R.id.set_color_button)
 
