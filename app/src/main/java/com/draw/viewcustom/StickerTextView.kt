@@ -11,6 +11,7 @@ import android.graphics.drawable.shapes.RectShape
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -35,15 +36,20 @@ class StickerTextView @JvmOverloads constructor(
     private lateinit var flipButton: AppCompatImageView
     private lateinit var transformButton: AppCompatImageView
 
-    private var lastX = 0f
-    private var lastY = 0f
-    private var initialDistance = 0f
-    private var initialRotation = 0f
-    private var currentScale = 1f
+
 
     private var isTouchingSticker = false
     private val hideBorderHandler = Handler(Looper.getMainLooper())
     private val hideBorderRunnable = Runnable { borderView.isVisible = false }
+
+
+    private var initialDistance: Float = 0f
+    private var currentScale: Float = 1f
+    private var initialRotation: Float = 0f
+    private var lastRotation: Float = 0f
+    private var lastX: Float = 0f
+    private var lastY: Float = 0f
+    private var isScaling: Boolean = false
 
     private var isHandleCheck: ICallBackCheck? = null
 
@@ -235,32 +241,34 @@ class StickerTextView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                if (isTouchWithinSticker(event)) {
-                    // Khi chạm vào sticker, khởi tạo các biến cần thiết
-                    isTouchingSticker = true
+                if (isTouchWithinTransformButton(event)) {
+                    // Bắt đầu sự kiện chạm vào nút transformButton
                     lastX = event.rawX
                     lastY = event.rawY
                     initialDistance = getDistance(event)
                     initialRotation = getAngle(event.rawX, event.rawY)
-                    borderView.isVisible = true
-                    hideBorderHandler.removeCallbacks(hideBorderRunnable)
-                } else if (isTouchWithinTransformButton(event)) {
-                    // Khi chạm vào nút biến đổi, cũng khởi động tương tự
+                    return true
+                } else if (isTouchWithinSticker(event)) {
+                    // Xử lý tương tác chạm với sticker
                     isTouchingSticker = true
                     lastX = event.rawX
                     lastY = event.rawY
-                    // Logic cho việc biến đổi có thể được thêm vào đây
-                    return true // Chặn sự kiện để không truyền cho các view khác
+                    borderView.isVisible = true
+                    hideBorderHandler.removeCallbacks(hideBorderRunnable)
+                    return true
                 } else {
                     isTouchingSticker = false
-                    isHandleCheck?.check(false)
+                    return false
                 }
             }
+
             MotionEvent.ACTION_MOVE -> {
-                if (isTouchingSticker) {
-                    // Tính toán khoảng cách mới để thay đổi kích thước sticker
+                if (isTouchWithinTransformButton(event)) {
+                    // Thực hiện logic biến đổi khi kéo nút transformButton
                     val newDistance = getDistance(event)
                     val scaleFactor = newDistance / initialDistance
+
+                    // Giới hạn scale factor để tránh sticker quá lớn hoặc quá nhỏ
                     if (scaleFactor > 0.5f && scaleFactor < 2f) {
                         currentScale = scaleFactor
                         stickerTextView.scaleX = currentScale
@@ -268,13 +276,19 @@ class StickerTextView @JvmOverloads constructor(
                         updateBorderSize() // Cập nhật kích thước border
                     }
 
-                    // Tính toán góc mới để xoay sticker
+                    // Xoay sticker theo góc mới
                     val newAngle = getAngle(event.rawX, event.rawY)
-                    val rotationDelta = newAngle - initialRotation
-                    stickerTextView.rotation += rotationDelta
+                    stickerTextView.rotation += newAngle - initialRotation
                     initialRotation = newAngle
 
-                    // Xử lý di chuyển sticker
+                    // Cập nhật vị trí cuối
+                    lastX = event.rawX
+                    lastY = event.rawY
+                    return true
+                }
+
+                if (isTouchingSticker) {
+                    // Di chuyển sticker
                     val dx = event.rawX - lastX
                     val dy = event.rawY - lastY
                     stickerTextView.translationX += dx
@@ -286,23 +300,42 @@ class StickerTextView @JvmOverloads constructor(
                     lastY = event.rawY
                 }
             }
+
             MotionEvent.ACTION_UP -> {
-                if (isTouchingSticker) {
-                    hideBorderHandler.postDelayed(hideBorderRunnable, 2000) // Ẩn border sau 2 giây
+                if (isTouchWithinTransformButton(event)) {
+                    // Dừng thao tác với transformButton
+                    hideBorderHandler.postDelayed(hideBorderRunnable, 2000)
+                    return true
                 }
+
+                if (isTouchingSticker) {
+                    hideBorderHandler.postDelayed(hideBorderRunnable, 2000)
+                }
+
                 isTouchingSticker = false
             }
         }
-        return true // Trả về true để chặn sự kiện chạm
+        return true
     }
+
+
 
 
     private fun isTouchWithinTransformButton(event: MotionEvent): Boolean {
-        val buttonRect = Rect()
-        transformButton.getHitRect(buttonRect)
-        // Kiểm tra xem sự kiện chạm có nằm trong vùng của transformButton không
-        return buttonRect.contains(event.x.toInt(), event.y.toInt())
+        // Lấy tọa độ tâm của nút transformButton
+        val buttonCenterX = transformButton.x + transformButton.width / 2
+        val buttonCenterY = transformButton.y + transformButton.height / 2
+
+        // Tính khoảng cách giữa điểm chạm và tâm nút transform
+        val dx = event.x - buttonCenterX
+        val dy = event.y - buttonCenterY
+        val distance = hypot(dx.toDouble(), dy.toDouble()).toFloat()
+
+        // Kiểm tra nếu điểm chạm nằm trong bán kính 75 pixels từ tâm nút
+        return distance <= 75f
     }
+
+
     private fun isTouchWithinSticker(event: MotionEvent): Boolean {
         val stickerRect = Rect()
         val borderRect = Rect()
@@ -312,6 +345,7 @@ class StickerTextView @JvmOverloads constructor(
 
         // Lấy vùng của borderView
         borderView.getHitRect(borderRect)
+
 
         // Kiểm tra xem sự kiện chạm có nằm trong vùng của stickerTextView hoặc borderView không
         return stickerRect.contains(event.x.toInt(), event.y.toInt()) || borderRect.contains(event.x.toInt(), event.y.toInt())
@@ -327,6 +361,7 @@ class StickerTextView @JvmOverloads constructor(
         return bitmap
     }
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        Log.d("2tdp", "dispatchTouchEvent: ${event.action}")
         if (isTouchWithinSticker(event)) {
             // Nếu chạm vào sticker hoặc border, xử lý bình thường
             return super.dispatchTouchEvent(event)
